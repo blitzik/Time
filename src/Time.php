@@ -5,8 +5,8 @@ namespace blitzik\Utils;
 
 class Time
 {
-    const SECS_IN_MINUTE = '60'; // intentionally string
-    const SECS_IN_HOUR = '3600'; // intentionally string
+    private const SECS_IN_MINUTE = '60';
+    private const SECS_IN_HOUR = '3600';
 
 
     /** @var string */
@@ -44,30 +44,19 @@ class Time
      */
     private function gatherTime($time): string
     {
-        do {
-            if ($time instanceof self) {
-                $time = $time->getTime();
-                break;
-            }
+        if ($time instanceof self) {
+            $time = $time->getTime();
 
-            if ($time instanceof \DateTimeInterface) {
-                $time = $time->format('H:i:s');
-                break;
-            }
+        } elseif ($time instanceof \DateTimeInterface) {
+            $time = $time->format('H:i:s');
 
-            // time in seconds
-            if (is_int($time) || is_string($time) && preg_match('#^-?[0-9]+\z#', $time)) {
-                $this->numberOfSeconds = (string)$time;
-                $time = $this->seconds2time((string)$time);
-                break;
-            }
+        } elseif (is_int($time) || is_string($time) && preg_match('#^-?[0-9]+\z#', $time)) {
+            $this->numberOfSeconds = (string)$time;
+            $time = $this->seconds2time((string)$time);
 
-            // time in hours:minutes format
-            if (is_string($time) && preg_match('##u', $time) && preg_match('~^-?\d+:[0-5][0-9]$~', $time)) {
-                $time = $time . ':00'; // add SECONDS part to HH..:MM format
-                break;
-            }
-        } while (false);
+        } elseif (is_string($time) && preg_match('##u', $time) && preg_match('~^-?\d+:[0-5][0-9]$~', $time)) {
+            $time = $time . ':00'; // add SECONDS part to HH..:MM format
+        }
 
         if (!$this->isTimeFormatValid($time)) {
             throw new \InvalidArgumentException(
