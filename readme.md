@@ -1,7 +1,7 @@
 Time class
 ===
 
-Class for manipulating with time in format **HH:MM:SS**.
+Class for time manipulation. Format **HH:MM:SS**.
 
 **PHP's BCMath extension is required**.
 
